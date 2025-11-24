@@ -29,6 +29,9 @@ jobs:
     - name: Build
       run: dotnet build HelloApi/HelloApi.csproj --no-restore --configuration Release
     
+    - name: Build Tests
+      run: dotnet build HelloApi.Tests/HelloApi.Tests.csproj --no-restore --configuration Release
+    
     - name: Test
       run: dotnet test HelloApi.Tests/HelloApi.Tests.csproj --no-build --verbosity normal --configuration Release
 

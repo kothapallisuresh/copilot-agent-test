@@ -64,7 +64,7 @@ public class ApiEndpointsTests : IClassFixture<WebApplicationFactory<Program>>
         // Assert
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         
-        var returnedTime = DateTime.Parse(content);
+        var returnedTime = DateTimeOffset.Parse(content).UtcDateTime;
         
         // The returned time should be between before and after the request
         Assert.True(returnedTime >= beforeRequest.AddSeconds(-1));
