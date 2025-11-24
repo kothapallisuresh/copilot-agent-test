@@ -1,0 +1,11 @@
+@HelloApi_HostAddress = http://localhost:5249
+
+GET {{HelloApi_HostAddress}}/hello
+Accept: application/json
+
+###
+
+GET {{HelloApi_HostAddress}}/time
+Accept: application/json
+
+###
