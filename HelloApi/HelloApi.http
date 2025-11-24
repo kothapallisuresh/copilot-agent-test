@@ -4,3 +4,8 @@ GET {{HelloApi_HostAddress}}/hello
 Accept: application/json
 
 ###
+
+GET {{HelloApi_HostAddress}}/time
+Accept: application/json
+
+###

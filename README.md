@@ -1,98 +1,164 @@
 # Hello API
 
-A simple ASP.NET Core Web API with a single endpoint that returns a greeting message.
+A simple ASP.NET Core Web API with two endpoints for greeting and time retrieval.
 
 ## Description
 
-This is a minimal ASP.NET Core Web API that exposes a `/hello` endpoint which returns "Hello from Copilot!".
+This is a minimal ASP.NET Core Web API (.NET 8.0) that provides:
+- `/hello` endpoint - Returns "Hello from Copilot!"
+- `/time` endpoint - Returns the current server time in ISO 8601 format
 
 ## Prerequisites
 
-- [.NET 10.0 SDK](https://dotnet.microsoft.com/download) or later
+- [.NET 8.0 SDK](https://dotnet.microsoft.com/download) or later
 - [Docker](https://www.docker.com/get-started) (optional, for containerized deployment)
 
-## Setup Instructions
+## Quick Start
 
-### Running Locally
+### Build the Project
 
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/kothapallisuresh/copilot-agent-test.git
-   cd copilot-agent-test
-   ```
+```bash
+# Clone the repository
+git clone https://github.com/kothapallisuresh/copilot-agent-test.git
+cd copilot-agent-test
 
-2. Navigate to the project directory:
-   ```bash
-   cd HelloApi
-   ```
+# Restore dependencies
+dotnet restore HelloApi/HelloApi.csproj
 
-3. Restore dependencies:
-   ```bash
-   dotnet restore
-   ```
+# Build the project
+dotnet build HelloApi/HelloApi.csproj --configuration Release
+```
 
-4. Build the project:
-   ```bash
-   dotnet build
-   ```
+### Run the Application
 
-5. Run the application:
-   ```bash
-   dotnet run
-   ```
+```bash
+# Run from the HelloApi directory
+cd HelloApi
+dotnet run
+```
 
-6. The API will be available at `http://localhost:5000` (or the port shown in the console output)
+The API will be available at `http://localhost:5249` (or the port shown in the console output).
 
-7. Test the endpoint:
-   ```bash
-   curl http://localhost:5000/hello
-   ```
-   
-   Expected response: `Hello from Copilot!`
+### Test the Endpoints
 
-### Running with Docker
+```bash
+# Test the hello endpoint
+curl http://localhost:5249/hello
+# Expected: Hello from Copilot!
 
-1. Build the Docker image:
-   ```bash
-   docker build -t hello-api .
-   ```
+# Test the time endpoint
+curl http://localhost:5249/time
+# Expected: 2025-11-24T09:47:43.1472035Z (ISO 8601 format)
+```
 
-2. Run the container:
-   ```bash
-   docker run -p 8080:8080 hello-api
-   ```
+## Running Tests
 
-3. Test the endpoint:
-   ```bash
-   curl http://localhost:8080/hello
-   ```
-   
-   Expected response: `Hello from Copilot!`
+The project includes comprehensive unit tests using xUnit and ASP.NET Core integration testing.
+
+```bash
+# Run all tests
+dotnet test HelloApi.Tests/HelloApi.Tests.csproj
+
+# Run tests with detailed output
+dotnet test HelloApi.Tests/HelloApi.Tests.csproj --verbosity detailed
+```
+
+**Test Coverage:**
+- ✅ Hello endpoint returns correct message
+- ✅ Time endpoint returns ISO 8601 formatted time
+- ✅ Time endpoint returns current server time
+
+## Docker Deployment
+
+### Build the Docker Image
+
+```bash
+# Build from repository root
+docker build -t hello-api .
+```
+
+The Dockerfile uses a multi-stage build with:
+- **Build stage**: Uses .NET 8.0 SDK to compile the application
+- **Runtime stage**: Uses minimal .NET 8.0 ASP.NET runtime image
+
+### Run the Container
+
+```bash
+# Run the container
+docker run -p 8080:8080 hello-api
+
+# Test the endpoints
+curl http://localhost:8080/hello
+curl http://localhost:8080/time
+```
+
+### Pull from GitHub Container Registry
+
+After the CI/CD pipeline runs, images are published to GitHub Container Registry:
+
+```bash
+docker pull ghcr.io/kothapallisuresh/copilot-agent-test:main
+docker run -p 8080:8080 ghcr.io/kothapallisuresh/copilot-agent-test:main
+```
 
 ## API Endpoints
 
-- `GET /hello` - Returns a greeting message
+| Endpoint | Method | Description | Response |
+|----------|--------|-------------|----------|
+| `/hello` | GET | Returns a greeting message | `Hello from Copilot!` |
+| `/time` | GET | Returns current server time in ISO 8601 format | `2025-11-24T09:47:43.1472035Z` |
 
 ## Project Structure
 
 ```
 .
+├── .github/
+│   └── workflows/
+│       └── build-test-publish.yml  # CI/CD pipeline
 ├── HelloApi/
-│   ├── Program.cs              # Main application entry point
-│   ├── HelloApi.csproj         # Project configuration
-│   └── appsettings.json        # Application settings
-├── Dockerfile                  # Docker configuration
-├── .gitignore                  # Git ignore rules
-└── README.md                   # This file
+│   ├── Program.cs                  # Main application entry point
+│   ├── HelloApi.csproj             # Project configuration
+│   ├── appsettings.json            # Application settings
+│   └── Properties/
+│       └── launchSettings.json     # Development settings
+├── HelloApi.Tests/
+│   ├── ApiEndpointsTests.cs        # Integration tests
+│   └── HelloApi.Tests.csproj       # Test project configuration
+├── Dockerfile                      # Multi-stage Docker build
+├── .gitignore                      # Git ignore rules
+└── README.md                       # This file
 ```
+
+## CI/CD Pipeline
+
+The project includes a GitHub Actions workflow that:
+
+1. **Build & Test**: Restores dependencies, builds the project, and runs all tests
+2. **Docker Build & Push**: Builds the Docker image and publishes to GitHub Container Registry
+
+The workflow runs on:
+- Push to `main` or `copilot/**` branches
+- Pull requests to `main`
+- Manual trigger via workflow dispatch
 
 ## Development
 
-To modify the greeting message, edit the `/hello` endpoint in `HelloApi/Program.cs`:
+### Adding New Endpoints
+
+Edit `HelloApi/Program.cs` to add new endpoints:
 
 ```csharp
-app.MapGet("/hello", () => "Your custom message here!");
+app.MapGet("/your-endpoint", () => "Your response");
 ```
+
+### Running in Development Mode
+
+```bash
+cd HelloApi
+dotnet watch run
+```
+
+This will automatically rebuild and restart the application when you make changes.
 
 ## License
 
