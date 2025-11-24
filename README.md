@@ -129,14 +129,30 @@ docker run -p 8080:8080 ghcr.io/kothapallisuresh/copilot-agent-test:main
 └── README.md                       # This file
 ```
 
+## CI Pipeline
+
+The project includes a GitHub Actions CI workflow (`.github/workflows/ci.yml`) that automatically runs on every push and pull request to the `main` branch.
+
+**What the CI pipeline does:**
+1. **Restore dependencies** - Downloads all required NuGet packages
+2. **Build** - Compiles the HelloApi project in Release configuration
+3. **Build Tests** - Compiles the HelloApi.Tests project
+4. **Run tests** - Executes all xUnit tests and reports results
+
+**When it runs:**
+- On every push to the `main` branch
+- On every pull request targeting the `main` branch
+
+The CI pipeline ensures that all code changes pass the build and test requirements before being merged, maintaining code quality and catching issues early.
+
 ## CI/CD Pipeline
 
-The project includes a GitHub Actions workflow that:
+The project also includes a comprehensive CI/CD workflow (`.github/workflows/build-test-publish.yml`) that:
 
 1. **Build & Test**: Restores dependencies, builds the project, and runs all tests
 2. **Docker Build & Push**: Builds the Docker image and publishes to GitHub Container Registry
 
-The workflow runs on:
+This workflow runs on:
 - Push to `main` or `copilot/**` branches
 - Pull requests to `main`
 - Manual trigger via workflow dispatch
