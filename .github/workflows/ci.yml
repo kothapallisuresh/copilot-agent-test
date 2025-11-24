@@ -22,14 +22,9 @@ jobs:
         dotnet-version: '8.0.x'
     
     - name: Restore dependencies
-      run: |
-        dotnet restore HelloApi/HelloApi.csproj
-        dotnet restore HelloApi.Tests/HelloApi.Tests.csproj
+      run: dotnet restore HelloApi.Tests/HelloApi.Tests.csproj
     
-    - name: Build
-      run: dotnet build HelloApi/HelloApi.csproj --no-restore --configuration Release
-    
-    - name: Build Tests
+    - name: Build and Test
       run: dotnet build HelloApi.Tests/HelloApi.Tests.csproj --no-restore --configuration Release
     
     - name: Run tests
