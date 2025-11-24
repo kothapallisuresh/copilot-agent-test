@@ -24,7 +24,7 @@ public class ApiEndpointsTests : IClassFixture<WebApplicationFactory<Program>>
 
         // Assert
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-        Assert.Equal("Hello from Copilot!", content);
+        Assert.Equal("Hello from suresh", content);
     }
 
     [Fact]
